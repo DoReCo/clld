@@ -1,4 +1,4 @@
-<%inherit file="dorelld.mako"/>
+<%inherit file="myapp.mako"/>
 <%namespace name="util" file="util.mako"/>
 <%! active_menu_item = "about" %>
 
