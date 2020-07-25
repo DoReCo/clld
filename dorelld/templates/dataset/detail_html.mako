@@ -5,6 +5,10 @@
     ${util.cite()}
 </%def>
 
+<h2>WORK IN PROGRESS</h2>
+
+<p>This website is still under construction.</p>
+
 <h2>Welcome to DoReCo</h2>
 
 <p class="lead">DoReCo is a French-German collaborative project that brings together spoken language corpora from about 50 languages, extracted from documentations of small and often endangered languages. This resource will be used for cross-linguistic research on phonetic lengthening processes and on information rate, and will be made available for other research.</p>

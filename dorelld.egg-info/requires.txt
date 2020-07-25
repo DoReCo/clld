@@ -1,0 +1,15 @@
+clld
+
+[dev]
+flake8
+waitress
+
+[test]
+coverage>=4.2
+mock
+pytest-clld
+pytest-cov
+pytest-mock
+pytest>=3.1
+selenium
+zope.component>=3.11.0

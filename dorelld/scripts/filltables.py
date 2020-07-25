@@ -63,7 +63,7 @@ def readarray(mode,sheet):
 			if not n_temp:
 				continue
 			if ((mode == 0 and n_temp == "Glottocode") or 
-				(mode == 1 and n_temp == "Name")):
+				(mode == 1 and n_temp == "name")):
 				d_array[col] = {n_temp:col}
 				for tupl in l_temp:
 					d_array[col][tupl[0]] = tupl[1]
@@ -82,7 +82,8 @@ def opencsv(path,sheet,fi,sep):
 	- sheet/fi	:	the file name, respectively with and without extension
 	- sep		:	the separator symbol (default ',')
 	RETURNS:
-	- an iterator of tuples (fi,key,metadata)."""
+	- an iterator of tuples (fi,key,metadata).
+	DEPRECATED"""
 	
 	fil = pyexcel.iget_book(file_name=path,delimiter=sep)
 	sheet = fil.sheets[sheet].get_internal_array()
@@ -98,7 +99,8 @@ def openbook(path):
 	ARGUMENTS:
 	- path		:	the file path
 	RETURNS:
-	- an iterator of tuples (sheet,key,metadata)"""
+	- an iterator of tuples (sheet,key,metadata)
+	Note: Also creates default language description files."""
 		# We open the file
 	fil = pyexcel.iget_book(file_name=path)
 		# We get the 'languages' sheet first
@@ -113,19 +115,28 @@ def openbook(path):
 			d_langs[code] = True
 			yield (low,code,metadata)
 		break
+		# We create each default language file
+	d = os.path.join(os.path.dirname(__file__),
+		                 "..","templates","descriptions")
+	for code in d_langs:
+		f = os.path.join(d,code+".html")
+		if not os.path.exists(f):
+			with open(f,'w',encoding="utf-8") as fi:
+				fi.write("<br/><br/><br/><br/><br/><br/>\n"
+                           "<br/><br/><br/><br/><br/><br/>")
 		# We get each language sheet next
 	for code in d_langs:
-		sheet = fil.sheets.get(n_sheet,None)
+		sheet = fil.sheets.get(code,None)
 		if not sheet:
 			continue
 		sheet = sheet.get_internal_array()
 		sheet = readarray(1,sheet)
-		for name,d_lang in sheet.items():
+		for name,metadata in sheet.items():
 			yield (code,name,metadata)
 	pyexcel.free_resources()
 
 	# Main function
-def filltables(path="tables",sep=","):
+def filltables(path="/home/doreco/dorelld/dorelld/tables",sep=","):
 	"""Fetches tables and yields on their information.
 	ARGUMENTS:
 	- path		:	the file path
@@ -145,7 +156,7 @@ def filltables(path="tables",sep=","):
 		#print(fil) #DEBUG
 			# Variables
 		fi,ext = os.path.splitext(fil)
-		f = os.path.join(path,fil)
+		f = os.path.join(path,fil); ite = None
 		if fi in d_files:
 		    continue
 			# We get an iterator over our file
@@ -182,7 +193,7 @@ if __name__ == "__main__":
 			sep = sys.argv[2]
 	print("Start:")
 	for tupl in filltables(path,sep):
-		print("\t",tupl[0], tupl[1][0])
-		for key, value in tupl[1][1].items():
+		print("\t",tupl[0], tupl[1])
+		for key, value in tupl[2].items():
 			print("\t\t\t",key,value)
 	print("End.")

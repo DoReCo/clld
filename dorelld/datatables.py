@@ -1,5 +1,21 @@
+
+"""
+Contains 'datatables' for actual data display on the website.
+
+Classes:
+'doreCol'		: basically a 'LinkCol' to open a language page.
+'Languages'		: the table of all languages
+'Contributions'	: the table of all texts
+                  > texts are filtered by glottocode
+                  
+Defs:
+'__init__'		: needed to pass **kwargs for 'base_query'
+'base_query'	: filters the content to display
+'col_defs'		: the columns displayed
+"""
+
 from clld.web import datatables
-from clld.web.datatables.base import Col, IdCol, LinkCol, ExternalLinkCol
+from clld.web.datatables.base import DataTable, Col, IdCol, LinkCol, ExternalLinkCol
 from clld.web.util.helpers import (
 	link, button, icon, JS_CLLD, external_link, linked_references, JSDataTable,
 )
@@ -7,12 +23,11 @@ from clld.web.util.helpers import (
 #from clld.web.util.htmllib import HTML
 
 from clld.db.models.common import Language, Contribution
-from myapp.models import doreLanguage, doreContrib
+from dorelld.models import doreLanguage, doreContrib
 
 class doreCol(Col):
     def format(self, item):
         obj = self.get_obj(item)
-        print(link(self.dt.req,obj, **self.get_attrs(item)))
         return link(self.dt.req, obj, **self.get_attrs(item)) if obj else ''
     
     def get_attrs(self, item):
@@ -23,10 +38,10 @@ class Languages(datatables.Languages):
         return [
             doreCol(self,'name', sTitle="Language",
                      model_col=doreLanguage.name),
-            doreCol(self,'id', sTitle="Glottocode",
-                     model_col=doreLanguage.id),
+            Col(self,'id', sTitle="Glottocode",
+                     format=lambda i: i.glo_link()),
             Col(self,'family', sTitle="Family",
-                     model_col=doreLanguage.family),
+                     format=lambda i: i.fam_link()),
             Col(self,'area', sTitle="Area",
                      model_col=doreLanguage.area),
             Col(self,'creator', sTitle="Creator(s)",
@@ -40,7 +55,6 @@ class Languages(datatables.Languages):
             Col(self,'gloss', sTitle="Gloss",
                      model_col=doreLanguage.gloss),
         ]
-
 class Contributions(datatables.Contributions):
         # All of this just to parse the data
     __constraints__ = [doreContrib]
@@ -57,32 +71,22 @@ class Contributions(datatables.Contributions):
         # Actual display
     def col_defs(self):
         return [
-            Col(self,'tname', sTitle="Name",
+            Col(self,'tname', sTitle="File name",
                      model_col=doreContrib.tname),
-            Col(self,'spks', sTitle="Speakers",
-                     model_col=doreContrib.spks),
-            Col(self,'spks_age', sTitle="Age",
+            Col(self,'spks_age', sTitle="Speaker age",
+                     input_size='mini',
                      model_col=doreContrib.spks_age),
-            Col(self,'spks_agec', sTitle="Age certainty",
-                     model_col=doreContrib.spks_age),
-            Col(self,'spks_sex', sTitle="Gender",
+            Col(self,'spks_sex', sTitle="Speaker gender",
+                     input_size='mini',
                      model_col=doreContrib.spks_sex),
-            Col(self,'recdate', sTitle="Recording date",
-                     model_col=doreContrib.recdate),
-            Col(self,'recdatec', sTitle="Date certainty",
-                     model_col=doreContrib.recdatec),
+            #Col(self,'recdate', sTitle="Recording date",
+            #         model_col=doreContrib.recdate),
             Col(self,'genre', sTitle="Genre",
                      model_col=doreContrib.genre),
-            Col(self,'subgenre', sTitle="Sub-genre",
-                     model_col=doreContrib.subgenre),
             Col(self,'gloss', sTitle="Gloss",
                      model_col=doreContrib.gloss),
-            Col(self,'transl', sTitle="Translation",
-                     model_col=doreContrib.transl),
-            Col(self,'sound', sTitle="Sound quality",
-                     model_col=doreContrib.sound),
-            Col(self,'process', sTitle="Processed by",
-                     model_col=doreContrib.process),
+            #Col(self,'sound', sTitle="Sound quality",
+            #         model_col=doreContrib.sound),
             Col(self,'words', sTitle="Words",
                      model_col=doreContrib.words),
         ]

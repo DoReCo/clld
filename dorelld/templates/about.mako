@@ -1,4 +1,4 @@
-<%inherit file="myapp.mako"/>
+<%inherit file="dorelld.mako"/>
 <%namespace name="util" file="util.mako"/>
 <%! active_menu_item = "about" %>
 
@@ -28,9 +28,12 @@
 <h4 class="team"><a href="http://www.ddl.cnrs.fr/index.asp" target="_blank" rel="noreferrer noopener" aria-label=" (opens in a new tab)">Laboratoire Dynamique Du Langage</a></h4>
 <ul>
     <li><a rel="noreferrer noopener" href="http://www.ddl.cnrs.fr/Annuaires/index.asp?Langue=EN&amp;Page=Francois+PELLEGRINO" target="_blank">François Pellegrino</a> (Principal Investigator)</li>
-    <li>Matt Stave (Postdoc)</li><li>François Delafontaine (Assistant Ingénieur)</li><li><a rel="noreferrer noopener" aria-label="Sébastien Flavier(opens in a new tab)" href="http://www.ddl.cnrs.fr/Annuaires/Index.asp?Langue=EN&amp;Page=Sebastien%20FLAVIER" target="_blank">Sébastien Flavier </a></li>
+    <li><a rel="noreferrer noopener" href="http://www.ddl.cnrs.fr/Annuaires/index.asp?Langue=EN&amp;Page=Matthew+STAVE">Matt Stave (Postdoc)</a></li>
+    <li>François Delafontaine (Assistant Ingénieur)</li>
+    <li><a rel="noreferrer noopener" aria-label="Sébastien Flavier(opens in a new tab)" href="http://www.ddl.cnrs.fr/Annuaires/Index.asp?Langue=EN&amp;Page=Sebastien%20FLAVIER" target="_blank">Sébastien Flavier </a></li>
     <li><a rel="noreferrer noopener" aria-label=" Françoise Rose (opens in a new tab)" href="http://www.ddl.cnrs.fr/Annuaires/Index.asp?Langue=EN&amp;Page=Francoise%20ROSE" target="_blank">Françoise Rose </a></li>
-    <li><a rel="noreferrer noopener" aria-label="Shelece Easterday (opens in a new tab)" href="http://www.ddl.cnrs.fr/Annuaires/Index.asp?Langue=FR&amp;Page=Shelece%20EASTERDAY" target="_blank">Shelece Easterday </a> </li><li>Laurent Romary</li>
+    <li><a rel="noreferrer noopener" aria-label="Shelece Easterday (opens in a new tab)" href="http://www.ddl.cnrs.fr/Annuaires/Index.asp?Langue=FR&amp;Page=Shelece%20EASTERDAY" target="_blank">Shelece Easterday </a> </li>
+    <li>Laurent Romary</li>
 </ul>
 
 <h4><a href="http://www.zas.gwz-berlin.de/" target="_blank" rel="noreferrer noopener" aria-label="Leibniz-Zentrum Allgemeine Sprachwissenschaft (opens in a new tab)">Leibniz-Zentrum Allgemeine Sprachwissenschaft</a></h4>

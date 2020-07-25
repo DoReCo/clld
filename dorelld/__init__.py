@@ -9,12 +9,14 @@ def main(global_config, **settings):
     """
     config = Configurator(settings=settings)
     config.include('clld.web.app')
+        # Menu
     config.register_menu(('dataset', functools.partial(menu_item, 'dataset',
                           label='Home')),
                          ('about', lambda c, r: (r.route_url('about'),
-                          'about')),
+                          'About')),
                          ('languages', functools.partial(menu_item,
                           'languages')),
-                         ('sources', functools.partial(menu_item, 'sources')),
                         )
+        # Download link (see 'views.py')
+    config.add_route('doreLoad','/doreLoad')
     return config.make_wsgi_app()
