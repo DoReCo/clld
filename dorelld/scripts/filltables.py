@@ -99,8 +99,7 @@ def openbook(path):
 	ARGUMENTS:
 	- path		:	the file path
 	RETURNS:
-	- an iterator of tuples (sheet,key,metadata)
-	Note: Also creates default language description files."""
+	- an iterator of tuples (sheet,key,metadata)"""
 		# We open the file
 	fil = pyexcel.iget_book(file_name=path)
 		# We get the 'languages' sheet first
@@ -136,7 +135,7 @@ def openbook(path):
 	pyexcel.free_resources()
 
 	# Main function
-def filltables(path="/home/doreco/dorelld/dorelld/tables",sep=","):
+def filltables(path="/home/doreco/dorelld/tables",sep=","):
 	"""Fetches tables and yields on their information.
 	ARGUMENTS:
 	- path		:	the file path
@@ -193,7 +192,7 @@ if __name__ == "__main__":
 			sep = sys.argv[2]
 	print("Start:")
 	for tupl in filltables(path,sep):
-		print("\t",tupl[0], tupl[1])
-		for key, value in tupl[2].items():
+		print("\t",tupl[0], tupl[1][0])
+		for key, value in tupl[1][1].items():
 			print("\t\t\t",key,value)
 	print("End.")
