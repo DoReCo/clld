@@ -1,59 +1,47 @@
-import os
-from urllib import parse,request
-from zipfile import ZipFile 
+from clld.web.util.htmllib import HTML, literal
 
-import clld.web.util.helpers as helpers
-
-def cite_button(req, ctx):
-    return helpers.button(
-        'cite',
-        id="cite-button-%s" % ctx.id,
-        onclick=helpers.JSModal.show(ctx.name, req.resource_url(ctx, ext='md.html')))
-
-def _getfiles(lang):
-	"""For 'dorload()'. Gets the files."""
-def _getcite(lang):
-	"""For 'dorload()'. Gets the citations."""
-	return None
-def _zip(files,cite,meta=None):
-	"""For 'dorload()'. Zips everything together."""
-	return None
-def dorload(lang,i=-1,wav=False):
-	"""Downloading files, regrouping them, zipping them.
-	ARGUMENTS:
-	- 'lang'	:	the collection to download
-	- 'i'		:	the type of format to download
-	- 'wav'		:	whether to fetch sounds too
-	RETURNS:
-	- When all is said and done, a '.zip' file.
-	Note: the '.zip' should contain:
-	      a) the transcriptions in a given format (.x)
-	      b) a metadata document (?)
-	      c) the citations to include (.txt)"""
-	
-	url = "hdl.handle.net/11280/6e9d57e9"
-	fi = request.Request(url)
-	response = request.urlopen(glottolog).read()
-	return response
-		# to do
-	files = _getfiles(lang)
-	cite = _getcite(lang)
-	pack = _zip(files,cite)
-def download_button(req,ctx,i=0):
-	"""Actual download button."""
-	alng=""; name=""; wav=False
-	if i == 0:
-		name = "WAV"; wav = True
-	elif i == 1:
-		name = "Praat"
-	elif i == 2:
-		name = "Elan"
-	elif i == 3:
-		name = "Tabular"
-	elif i == 4:
-		name = "TEI"
-	
-	return helpers.button(
-	       name,
-	       id="b-download-%s" % ctx.id
-	       )
+    ## A download form for all pages
+    # 'full'    : displays the full form or (False) just the button
+    #             default values then are 'wav=True&format=all'
+def get_form(lang_n="",ext=False, full=True):
+    style = ("<style>"
+     "form {float: left; margin: 0px; padding: 0px;} "
+     "input {float: left; margin-right: 10px;} "
+     "select {float: left; margin-right: 10px;} "
+     "label {float: left; margin-right: 10px;} "
+     "p.form {float: left; margin-right: 10px; padding: 3px;}"
+     "</style>")
+    lang = ("<input type=\"hidden\" id=\"f_id\" "
+            "name=\"id\" value=\""+lang_n+"\">")
+    if full:
+        wav =  ("<input type=\"checkbox\" id=\"f_wav\" name=\"wav\" "
+                "value=\"WAV\"><label for=\"f_wav\">WAV</label>")
+        form = ("<select id=\f_format\" name=\"format\">"
+          "<option value=\"all\">All types</option>"
+          "<option value=\"praat\">Praat (.TextGrid)</option>"
+          "<option value=\"elan\">Elan (.eaf)</option>"
+          "<option value=\"tabular\">Tabular (.csv)</option>"
+          "<option value=\"tei\">TEI (.xml)</option>"
+          "<option value=\"cross1\">Crosstable_1</option>"
+          "<option value=\"cross2\">Crosstable_2</option>"
+          "<option value=\"cross3\">Crosstable_3</option></select>")
+    else:
+        wav = ("<input type=\"hidden\" id=\"f_wav\" "
+               "name=\"wav\" value=\"True\">")
+        form = ("<input type=\"hidden\" id=\"f_format\" "
+               "name=\"format\" value=\"all\">")
+    if ext and not ext == "False":
+        ext = ("<input type=\"hidden\" id=\"f_ext\" "
+               "name=\"extended\" value=\"True\">")
+        text = ("<p class=\"form\"><b>Download all files:</b></p>")
+    else:
+        ext = ("<input type=\"hidden\" id=\"f_ext\" "
+               "name=\"extended\" value=\"False\">")
+        text = ("<p class=\"form\"><b>Download all core files:</b></p>")
+    submit = "<input type=\"submit\" value=\"Download\">"
+    if full:
+        return literal(style+text+"<form method=\"post\" action=\"/doreLoad\">"
+            +ext+lang+wav+form+submit+"</form>")
+    else:
+        return literal(style+"<form method=\"post\" action=\"/doreLoad\">"
+            +ext+lang+wav+form+submit+"</form>")

@@ -1,3 +1,5 @@
+## List of all languages
+
 <%inherit file="../${context.get('request').registry.settings.get('clld.app_template', 'app.mako')}"/>
 <%namespace name="util" file="../util.mako"/>
 <%! active_menu_item = "languages" %>
@@ -13,8 +15,6 @@
     % endif
 </div>
 
-
-
 <div class="tabbable">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#cor" data-toggle="tab">Core</a></li>
@@ -22,10 +22,12 @@
     </ul>
     <div class="tab-content">
         <div id="cor" class="tab-pane active">
-            ${ctx.render()}
+            ${u.get_form("languages")}
+            ${request.get_datatable('languages',h.models.Language).render()}
         </div>
         <div id="ext" class="tab-pane">
-            <p>Remains to be done.</p>
+            ${u.get_form("languages",True)}
+            ${request.get_datatable('languages',h.models.Language, extended="True").render()}
         </div>
     </div>
 </div>

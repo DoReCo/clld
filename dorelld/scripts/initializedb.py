@@ -16,23 +16,24 @@ def _addLang(lp):
     """For a lighter 'main' function and because of checks."""
     
     for a in range(len(lp)):
-        if a == 18:
+        if a == 21:
             if lp[a] == "no":
                 lp[a] = False
             else:
                 lp[a] = True
-        elif a > 15 and (not lp[a] or lp[a] == 'na'): #coordinates
+        elif a > 18 and (not lp[a] or lp[a] == 'na'): #coordinates
             lp[a] = 0.0
-        elif a > 9 and not lp[a]: # words/speakers/texts
+        elif a > 12 and not lp[a]: # words/speakers/texts
             lp[a] = 0
         elif not lp[a]:
             lp[a] = 'na'
     lang = doreLanguage(lp[0],id=lp[0],name=lp[1],family=lp[2],
              fam_glottocode=lp[3],area=lp[4],creator=lp[5],
-             archive=lp[6],arclink=lp[7],transl=lp[8],gloss=lp[9],
-             words=lp[10],spks=lp[11],texts=lp[12],
-             c_words=lp[13],c_spks=lp[14],c_texts=lp[15],
-             latitude=lp[16],longitude=lp[17],extended=lp[18])
+             archive=lp[6],arclink=lp[7],transl=lp[8],
+             lic=lp[9],audio_lic=lp[10],NAK=lp[11],gloss=lp[12],
+             words=lp[13],spks=lp[14],texts=lp[15],
+             c_words=lp[16],c_spks=lp[17],c_texts=lp[18],
+             latitude=lp[19],longitude=lp[20],extended=lp[21])
     DBSession.add(lang)
     DBSession.flush()
     return lang
@@ -40,20 +41,22 @@ def _addText(lp):
     """For a lighter 'main' function and because of checks."""
 
     for a in range(1,len(lp)):
-        if a == 16:
+        if a == 24:
             if lp[a] == "no":
                 lp[a] = False
             else:
                 lp[a] = True
-        elif a == 15 and not lp[a]:
+        elif a == 23 and not lp[a]:
             lp[a] = 0
         elif not lp[a]:
             lp[a] = 'na'
     DBSession.add(doreContrib(id=lp[1],tname=lp[2],spks=lp[3],spks_age=lp[4],
              spks_agec=lp[5],spks_sex=lp[6],recdate=lp[7],recdatec=lp[8],
              genre=lp[9],subgenre=lp[10],gloss=lp[11],transl=lp[12],
-             sound=lp[13],process=lp[14],words=lp[15],glottocode=lp[0],
-             extended=lp[16]))
+             sound=lp[13],process=lp[14],NAKwav=lp[15],NAKpraat=lp[16],
+             NAKelan=lp[17],NAKtab=lp[18],NAKtei=lp[19],NAKcross1=lp[20],
+             NAKcross2=lp[21],NAKcross3=lp[22],glottocode=lp[0],
+             words=lp[23],extended=lp[24]))
     DBSession.flush()
 def _addDataset(data):
     """For a lighter 'main' function."""
@@ -62,12 +65,11 @@ def _addDataset(data):
         id=dorelld.__name__,
         name="DoReCo",
         domain='doreco.info',
-        description=('DoReCo: Language Documentation Reference Corpora'),
+        description=('DoReCo'), # name for citation?
         published=date(2020,9,1), # date
         contact='thisisamail@nowhere.lo', # mail
-        publisher_name='DDL, ZAS',
-        publisher_place='Lyon, Berlin',
-        publisher_url='https://anr.fr/Projet-ANR-18-FRAL-0010',
+        publisher_name='',
+        publisher_place='',
         license='http://creativecommons.org/licenses/by/4.0/',
         jsondata={
             'license_icon': 'cc-by.png',
@@ -87,9 +89,9 @@ def main(args):
     data = Data()
         # dataset
     _addDataset(data)
-
+    
         # load languages
-    for typ,name,tupl in filltables("/home/doreco/dorelld/tables"):
+    for typ,name,tupl in filltables():
         if typ == "languages":
             lang = _addLang([name,tupl.get('Language',"na"),
                      tupl.get('Family',"na"),
@@ -99,16 +101,19 @@ def main(args):
                      tupl.get('Archive',"na"),
                      tupl.get('Archive_link',"na"),
                      tupl.get('Translation',"na"),
+                     tupl.get('License',"na"),
+                     tupl.get('Audio license',"na"),
+                     tupl.get('NAKALA',"na"),
                      tupl.get('Gloss',"na"),
                      tupl.get('Words',0),
-                     tupl.get('Speakers',0),
+                     tupl.get('Spkeakers',0),
                      tupl.get('Texts',0),
-                     tupl.get('coreWords',0),
-                     tupl.get('coreSpeakers',0),
-                     tupl.get('coreTexts',0),
+                     tupl.get('Core words',0),
+                     tupl.get('Core speakers',0),
+                     tupl.get('Core texts',0),
                      tupl.get('Latitude',0.0),
                      tupl.get('Longitude',0.0),
-                     tupl.get('extended',"no")])
+                     tupl.get('Extended',"no")])
             add_language_codes(data, lang,tupl.get('iso-639-3'),
                                glottocode=name)
         else:
@@ -125,9 +130,17 @@ def main(args):
                      tupl.get('transl',"na"),
                      tupl.get('sound',"na"),
                      tupl.get('processed',"na"),
+                     tupl.get('NAK_wav',"na"),
+                     tupl.get('NAK_praat',"na"),
+                     tupl.get('NAK_elan',"na"),
+                     tupl.get('NAK_tabular',"na"),
+                     tupl.get('NAK_tei',"na"),
+                     tupl.get('NAK_cross1',"na"),
+                     tupl.get('NAK_cross2',"na"),
+                     tupl.get('NAK_cross3',"na"),
                      tupl.get('words',0),
                      tupl.get('extended',"no")])
-                     
+
     # unused
 def prime_cache(args):
     """If data needs to be denormalized for lookup, do that here.
