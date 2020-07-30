@@ -156,7 +156,7 @@ def download(req):
           If the zip file already exists, though, it is directly returned."""
 
         # get variables
-    s_path = "/data/downloads"                  # download dir_path
+    s_path = "downloads"                  # download dir_path
     nakala = "https://www.nakala.fr/data"       # nakala data url
     ch, lang_n,lang,wav,format_n,ext,z_name = _downargs(req,s_path)
         # Missing variables, return default page
