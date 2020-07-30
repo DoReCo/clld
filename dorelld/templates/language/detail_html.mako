@@ -1,42 +1,10 @@
 ## Language-specific page
-## Should load a description and a 'contribution' table (texts)
 
     ## load stuff
 <%inherit file="../${context.get('request').registry.settings.get('clld.app_template', 'app.mako')}"/>
 <%namespace name="util" file="../util.mako"/>
 <%! active_menu_item = "languages" %>
 <%block name="title">${_('Language')} ${ctx.name}</%block>
-    ## Download form
-<style>
-	form {display: inline; float: left; margin: 0px; padding: 0px;}
-	input {float: left; margin-right: 10px;}
-	select {float: left; margin-right: 10px;}
-	label {float: left; margin-right: 10px;}
-	p.form {float:left; margin-right: 10px; padding: 3px;}
-</style>
-<%def name="form(ext)">
-	<form method="post" action="/doreLoad">
-	    % if ext:
-	        <input type="hidden" id="f_core" name="core" value=True>
-	    % else:
-	        <input type="hidden" id="f_core" name="core" value=False>
-	    % endif
-		<input type="hidden" id="f_id" name="id" value=${ctx.id}>
-		<input type="checkbox" id="f_wav" name="WAV" value="WAV" style="">
-		<label for="f_wav">WAV</label>
-		<select id="f_format" name="format">
-			<option value="all">All types</option>
-			<option value="praat">Praat (.TextGrid)</option>
-			<option value="elan">Elan (.eaf)</option>
-			<option value="tabular">Tabular (.csv)</option>
-			<option value="tei">TEI (.xml)</option>
-			<option value="cross1">Crosstable_1</option>
-			<option value="cross2">Crosstable_2</option>
-			<option value="cross3">Crosstable_3</option>
-		</select>
-		<input type="submit" value="Download">
-	</form>
-</%def>
     ## get the description file
 <%
 import os
@@ -106,13 +74,12 @@ d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
     </ul>
     <div class="tab-content">
 		<div id="cor" class="tab-pane active">
-		    <p class="form"><b>Download all core files:</b></p>
-		    <%self:form ext="${False}"></%self:form>
+		    ${u.get_form(ctx.id)}
 		    ${request.get_datatable('contributions', h.models.Contribution, glottocode=ctx.id).render()}
 		</div>
 		<div id="ext" class="tab-pane">
-			<p class="form"><b>Download all files:</b></p>
-		    <%self:form ext="${True}"></%self:form>
+			${u.get_form(ctx.id,True)}
+		    ${request.get_datatable('contributions', h.models.Contribution, glottocode=ctx.id, extended="True").render()}
 		</div>
     </div>
 </div>
