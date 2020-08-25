@@ -8,13 +8,12 @@ from clld.web.util.helpers import (
 from clldutils.misc import dict_merged
 
 from clld.db.models.common import Language, Contribution
-from dorelld.models import doreLanguage, doreContrib
+from dorelld.models import doreLanguage, doreContrib, dorEditor
 
 class doreCol(Col):
     def format(self, item):
         obj = self.get_obj(item)
         return link(self.dt.req, obj, **self.get_attrs(item)) if obj else ''
-
     def get_attrs(self, item):
         return {'label': getattr(self.get_obj(item),self.name)}
 
@@ -37,14 +36,17 @@ class Languages(datatables.Languages):
         return [
             doreCol(self,'name', sTitle="Language",
                      model_col=doreLanguage.name),
-            doreCol(self,'id', sTitle="Glottocode",
-                     model_col=doreLanguage.id),
+            Col(self,'id', sTitle="Glottocode",
+                     format=lambda i: i.glo_link()),
             Col(self,'family', sTitle="Family",
-                     format=lambda i: i.fam_link()),
+                     format=lambda j: j.fam_link()),
             Col(self,'area', sTitle="Area",
                      model_col=doreLanguage.area),
             Col(self,'creator', sTitle="Creator(s)",
                      model_col=doreLanguage.creator),
+            Col(self,'lic', sTitle="License(s)",
+                     format=lambda k: k.lic_link(),
+                     bSearchable=False, bSortable=False),
             Col(self,'words', sTitle="Words",
                      model_col=words),
             Col(self,'spks', sTitle="Spk\'s",
@@ -97,6 +99,36 @@ class Contributions(datatables.Contributions):
                      model_col=doreContrib.words),
         ]
 
+class Contributors(datatables.Contributors):
+    def __init__(self, req, model, **kw):
+        super().__init__(req,model,**kw)
+        self.team = kw.pop('team',req.params.get('team',""))
+        self.status = kw.pop('status',req.params.get('status',""))
+        if self.team:
+            self.eid = self.eid+self.team
+    def base_query(self,query):
+        if self.team:
+            query = query.filter(dorEditor.team == self.team)
+        if self.status:
+            query = query.filter(dorEditor.status == self.status)
+        return query
+    def xhr_query(self):
+        return dict_merged(super(Contributors, self).xhr_query(),
+                           team=self.team,
+                           status=self.status)
+        # Actual display
+    def col_defs(self):
+        cols = [Col(self,'name', sTitle="Members",
+                     format=lambda i: i.name_link())]
+        if not self.team:
+            cols.append(Col(self,'team', sTitle="Team",
+                     model_col=dorEditor.team))
+        if not self.status:
+            cols.append(Col(self,'function', sTitle="Status",
+                     model_col=dorEditor.function))
+        return cols
+
 def includeme(config):
     config.register_datatable('languages', Languages)
     config.register_datatable('contributions', Contributions)
+    config.register_datatable('contributors', Contributors)

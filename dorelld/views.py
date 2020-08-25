@@ -1,5 +1,5 @@
 from pyramid.view import view_config
-from dorelld.scripts.downloads import download
+from dorelld.scripts.download import download
 
     # Download function
     ## This is an actual link, 'doreco.info/doreLoad'

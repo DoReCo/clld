@@ -5,6 +5,12 @@
 <%! active_menu_item = "languages" %>
 <%block name="title">${_('Languages')}</%block>
 
+<%def name="contextnav()">
+    % for name in request.registry.settings['home_comp']:
+    ${util.contextnavitem(name)}
+    % endfor
+</%def>
+
 <h2>${_('Languages')}</h2>
 
 <div class="accordion" id="lang" style="margin-top: 1em; clear: right;">
@@ -17,8 +23,8 @@
 
 <div class="tabbable">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#cor" data-toggle="tab">Core</a></li>
-        <li><a href="#ext" data-toggle="tab">Extended</a></li>
+        <li class="active"><a href="#cor" data-toggle="tab">Core set</a></li>
+        <li><a href="#ext" data-toggle="tab">Extended set</a></li>
     </ul>
     <div class="tab-content">
         <div id="cor" class="tab-pane active">

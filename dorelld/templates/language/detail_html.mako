@@ -5,11 +5,20 @@
 <%namespace name="util" file="../util.mako"/>
 <%! active_menu_item = "languages" %>
 <%block name="title">${_('Language')} ${ctx.name}</%block>
-    ## get the description file
+    ## style
+<style>td {text-indent: 10px;}</style>
+    ## get the description file (+ source object)
 <%
 import os
 d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
-                 "templates","descriptions")
+                 "templates")
+desc = os.path.join(d,"descriptions",ctx.id+".html"); d_ch = False
+pres = os.path.join(d,"presentations",ctx.id+".html"); p_ch = False
+if os.path.isfile(desc):
+    d_ch = True
+if os.path.isfile(pres):
+    p_ch = True
+s = request.db.query(h.models.Source).filter(h.models.Source.name==ctx.id).all()[0]
 %>
 
     ## we'll need jquery
@@ -17,6 +26,12 @@ d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
 
 
     ## ## Now we can start writing ## ##
+
+<%def name="contextnav()">
+    % for name in request.registry.settings['home_comp']:
+    ${util.contextnavitem(name)}
+    % endfor
+</%def>
 
 
     ## title
@@ -26,24 +41,10 @@ d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
 <div class="accordion" id="acc" style="margin-top: 1em; clear: right;">
         ## Information
     <%util:accordion_group eid="acc_info" parent="acc" title="Information" open="True">
-		<style>td {text-indent: 10px;}</style>
+		    ## metadata
 		<table>
-			<tr>
-				% if ctx.fam_glottocode == "na":
-					<td align="left"> <b>Family:</b></td>
-					<td align="left"> ${ctx.family}</td>
-				% else:
-					<td align="left"> <b>Family:</b></td>
-					<td align="left"> ${ctx.fam_link()} 
-					                  (${ctx.fam_glottocode})</td>
-				% endif
-			</tr>
-			<tr>
-				<td align="left"> <b>Macro-area:</b></td>
-				<td align="left"> ${ctx.area}</td>
-			</tr>
             <tr>
-				<td align="left"> <b>Corpus owner(s):</b></td>
+				<td align="left"> <b>Corpus creator(s):</b></td>
 				<td align="left"> ${ctx.creator}</td>
             </tr>
             % if not ctx.archive == "na":
@@ -53,15 +54,31 @@ d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
                 </tr>
             % endif
             <tr>
+                <td align="left"> <b>Annotation files license:</b></td>
+                <td align="left"> ${ctx.get_lic()}</td>
+            </tr>
+            <tr>
+                <td align="left"> <b>Audio files license:</b></td>
+                <td align="left"> ${ctx.get_alic()}</td>
+            </tr>
+            <tr>
                 <td align="left"> <b>Translation:</b></td>
                 <td align="left"> ${ctx.transl}</td>
             </tr>
         </table>
+            ## custom description
+        % if d_ch:
+            <%include file="${desc}"/>
+        % endif
+            ## cite button
+        ${h.cite_button(request, s)}
     </%util:accordion_group>
         ## Description
-    <%util:accordion_group eid="acc_desc" parent="acc" title="Description">
-        <%include file="${d}/${ctx.id}.html"/>
-    </%util:accordion_group>
+    % if p_ch:
+		<%util:accordion_group eid="acc_desc" parent="acc" title="Description">
+			<%include file="${pres}"/>
+		</%util:accordion_group>
+	% endif
 </div>
 
     ## Datatable
@@ -69,8 +86,8 @@ d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
     ## core vs extended tabs
 <div class="tabbable">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#cor" data-toggle="tab">Core</a></li>
-        <li><a href="#ext" data-toggle="tab">Extended</a></li>
+        <li class="active"><a href="#cor" data-toggle="tab">Core set</a></li>
+        <li><a href="#ext" data-toggle="tab">Extended set</a></li>
     </ul>
     <div class="tab-content">
 		<div id="cor" class="tab-pane active">
@@ -86,6 +103,29 @@ d = os.path.join(os.path.abspath(os.path.dirname(u.__file__)),
 
     ## sidebar
 <%def name="sidebar()">
+        ## glottocode/isocode
     ${util.codes()}
+        ## map
     ${util.language_meta()}
+        ## language information
+    <div class="accordion" id="side" style="margin-top: 1em; clear: right;">
+		 <%util:accordion_group eid="side_info" parent="side" title="Language Information" open="True">
+			<table>
+				<tr>
+					% if ctx.fam_glottocode == "na":
+						<td align="left"> <b>Family:</b></td>
+						<td align="left"> ${ctx.family}</td>
+					% else:
+						<td align="left"> <b>Family:</b></td>
+						<td align="left"> ${ctx.fam_link()} 
+										  (${ctx.fam_glottocode})</td>
+					% endif
+				</tr>
+				<tr>
+					<td align="left"> <b>Macro-area:</b></td>
+					<td align="left"> ${ctx.area}</td>
+				</tr>
+			</table>
+		</%util:accordion_group>
+	</div>
 </%def>
