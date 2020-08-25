@@ -195,7 +195,7 @@ def _openbook(path):
             yield (code,name,metadata)
     pyexcel.free_resources()
     # Main function
-def filltables(path="/home/doreco/dorelld/tables",sep=","):
+def filltables(path="",sep=","):
     """Fetches tables and yields on their information.
     ARGUMENTS:
     - path      :   the file path
@@ -244,11 +244,11 @@ def filltables(path="/home/doreco/dorelld/tables",sep=","):
     # Other functions
 def cleardb():
     """Clearing the database."""
-    os.system("sudo -u postgres psql -c \"alter database dboreco owner"
+    os.system("sudo -u postgres psql -c \"alter database x owner"
               " to postgres;\"")
-    os.system("sudo -u postgres psql -c \"drop database dboreco;\"")
-    os.system("sudo -u postgres psql -c \"create database dboreco;\"")
-    os.system("sudo -u postgres psql -c \"alter database dboreco owner"
+    os.system("sudo -u postgres psql -c \"drop database x;\"")
+    os.system("sudo -u postgres psql -c \"create database x;\"")
+    os.system("sudo -u postgres psql -c \"alter database x owner"
               " to dboreco\"")
 def downtable(url,path="",f=""):
     """Downloads the table for use."""
@@ -340,7 +340,7 @@ def _get_count(mode,d_x,book=None,f=""):
     else:
         book.save_as(f)
     return 0
-def count(path="/home/vuld/CLLD/myapp/tables"):
+def count(path=""):
     """Fill 'spks/words/texts' columns.
     ARGUMENTS:
     - 'path'        :   the directory to look after
