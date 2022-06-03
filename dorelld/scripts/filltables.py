@@ -113,17 +113,7 @@ def _opencsv(d_csv,sep=","):
                 d_langs[code] = True
                 yield ('sources',code,metadata)
     
-        # We create each default language file
-    d = os.path.join(os.path.dirname(__file__),
-                         "..","templates","descriptions")
-    if not os.path.isdir(d):
-        os.mkdir(d)
-    for code in d_langs:
-        f = os.path.join(d,code+".html")
-        if not os.path.exists(f):
-            with open(f,'w',encoding="utf-8") as fi:
-                fi.write("<br/><br/><br/><br/><br/><br/>\n"
-                           "<br/><br/><br/><br/><br/><br/>")
+
         # We finally get each language sheet
     for code in d_langs:
         if not code in d_csv:
@@ -172,18 +162,7 @@ def _openbook(path):
         sheet = _readarray(1,sheet)
         for code,metadata in sheet.items():
             yield ('sources',code,metadata)
-
-        # We create each default language file
-    d = os.path.join(os.path.dirname(__file__),
-                         "..","templates","descriptions")
-    if not os.path.isdir(d):
-        os.mkdir(d)
-    for code in d_langs:
-        f = os.path.join(d,code+".html")
-        if not os.path.exists(f):
-            with open(f,'w',encoding="utf-8") as fi:
-                fi.write("<br/><br/><br/><br/><br/><br/>\n"
-                           "<br/><br/><br/><br/><br/><br/>")
+    
         # We finally get each language sheet
     for code in d_langs:
         sheet = fil.sheets.get(code,None)
@@ -226,6 +205,7 @@ def filltables(path="",sep=","):
             elif (ext == '.ods' or '.xls' in ext) and not book:
                 book = f
         # We prioritize 'ods/xls'
+    ite = None
     if book:
         ite = _openbook(book); del d_csv
         # Otherwise we go for 'csv/tsv'

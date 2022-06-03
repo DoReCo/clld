@@ -11,11 +11,12 @@ import dorelld
 from dorelld.models import doreLanguage, doreContrib, dorEditor
 from dorelld.scripts.filltables import cleardb, filltables
 
+
     # 'main' : initializes the database
     # Don't call directly: requires a DBSession
 def _addLang(lp):
     """For a lighter 'main' function and because of checks."""
-    
+
     for a in range(len(lp)):
         if a == 22:
             if lp[a] == "no":
@@ -71,7 +72,7 @@ def _addText(lp):
     DBSession.flush()
 def _addSource(lp):
     """For a lighter 'main' function."""
-    
+
     DBSession.add(common.Source(id=lp[0],name=lp[0],
              author=lp[2],year=lp[3],title=lp[4],url=lp[5],note=lp[6]))
     DBSession.flush()
@@ -87,7 +88,7 @@ def _addEditor(dataset,count,lp):
     return dataset,count
 def _addDataset(data):
     """For a lighter 'main' function."""
-    
+
     dataset = common.Dataset(
         id=dorelld.__name__,
         name="DoReCo",
@@ -110,13 +111,17 @@ def main(args):
     'filltables()' iterates over each row of each table.
     'typ' is the name of the table, 'name' a key column and 'tupl'
     the other columns as a dict {column_name,cell_value}."""
-    
+
     data = Data(); count = 0
         # dataset
     dataset = _addDataset(data)
         # load languages
     for typ,name,tupl in filltables():
-        if typ == "languages":
+        if not name or name == "na":
+            continue
+        #TODO we exclude non core language
+        if typ == "languages" and tupl.get('Id').startswith('L_'):
+            #print(name, tupl)
             lang = _addLang([name,tupl.get('Language',"na"),
                      tupl.get('Family',"na"),
                      tupl.get('fam_glottocode',""),
@@ -156,7 +161,10 @@ def main(args):
                      tupl.get('url',"na"),
                      tupl.get('note',"na")])
         else:
-            _addText([typ,name,tupl.get('name',"na"),
+            #TODO for texts, we exclude delete and so on in column extended
+            if tupl.get('extended') in ['no', 'yes']:
+                #if typ=='dolg1241' : print(tupl):''
+                _addText([typ,name,tupl.get('name',"na"),
                      tupl.get('spk_code',"na"),
                      tupl.get('spk_age','0'),
                      tupl.get('spk_age_c',"na"),
@@ -170,12 +178,12 @@ def main(args):
                      tupl.get('sound',"na"),
                      tupl.get('overlap',"na"),
                      tupl.get('processed',"na"),
-                     tupl.get('NAKALA',"na"),
+                     tupl.get('nakala',"na"),
                      tupl.get('words',0),
                      tupl.get('extended',"no")])
         # dataset
         # Note: needs to run after loading (for editors)
-    
+
     DBSession.add(dataset); DBSession.flush()
 
     # unused
