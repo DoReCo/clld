@@ -16,12 +16,6 @@ if lb > l:
 %>
 <style>.int {border: 1px solid #CCCCCC; border-radius: 5px; margin: 5px; padding: 10px;}</style>
 
-<%def name="contextnav()">
-    % for name in request.registry.settings['home_comp']:
-    ${util.contextnavitem(name)}
-    % endfor
-</%def>
-
 <div class="int">
     <h2>Project</h2><a href="#project"></a>
     <p>Speech rate and pauses provide us with a window into the cognitive-neural and physiological-articulatory bases of the human language production system, but cross-linguistic variation in this domain remain understudied. This project fills this gap by comparative studies of spontaneously spoken language in a diverse sample of 50 languages. For this purpose, we create a multilingual reference corpus of language documentation data (DoReCo) consisting of annotations and associated audio recordings that are archived at repositories such as The Language Archive (TLA), especially from the DOBES collection. DoReCo will be built from data that are already transcribed, translated into a major language, and time-aligned at the level of discourse units with audio files.</p>

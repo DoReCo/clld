@@ -1,6 +1,8 @@
 MANIFEST.in
 development.ini
+requirements.txt
 setup.cfg
+setup.py
 tox.ini
 dorelld/__init__.py
 dorelld/adapters.py
@@ -23,3 +25,4 @@ dorelld/static/project.css
 dorelld/static/project.js
 dorelld/templates/dorelld.mako
 dorelld/templates/dataset/detail_html.mako
+dorelld/templates/parameter/detail_html.mako

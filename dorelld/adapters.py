@@ -1,7 +1,8 @@
 from clld import interfaces
 from clld.web.adapters.md import BibTex, TxtCitation
-from clld.web.adapters.base import Representation
+from clld.web.adapters.base import Representation, adapter_factory
 
+#from dorelld.interfaces import ILinkingAudio
 from dorelld.util import get_cite
 
     # Allows for citations from 'source' objects.
@@ -34,6 +35,7 @@ class SourceTxtCitation(TxtCitation):
 def includeme(config):
     pass
     config.register_adapter(SourceMetadata, interfaces.ISource)
+    #config.register_adapter(adapter_factory('audio/detail_html.mako'), ILinkingAudio)
     for cls in [SourceBibTex, SourceTxtCitation, SourceReferenceManager]:
         for if_ in [interfaces.IRepresentation, interfaces.IMetadata]:
             config.register_adapter(cls, interfaces.ISource, if_)

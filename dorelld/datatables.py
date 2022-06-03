@@ -1,3 +1,4 @@
+from sqlalchemy.orm import joinedload
 from clld.web import datatables
 from clld.web.datatables.base import Col, IdCol, LinkCol, ExternalLinkCol
 from clld.web.util.helpers import (
@@ -97,8 +98,26 @@ class Contributions(datatables.Contributions):
             #         model_col=doreContrib.sound),
             Col(self,'words', sTitle="Words",
                      model_col=doreContrib.words),
+            #Col(self,'wave', sTitle="Text annotation",
+            #         model_col=doreContrib.NAK, format=ExternalLinkCol),
         ]
 
+def ExternalLinkCol(value):
+    handle = getattr(value, 'NAK')
+    #TODO make parser ready to live
+    result = ''
+    if handle !='na':
+        result = '<a href="https://test.nakala.fr/' + handle + '" title="data repository" target="_BLANK"><img style="height:2vh;" src="https://nakala.fr/build/images/nakala.png" alt="' + handle + '"/></a>'
+    return result
+
+    parse_handle = handle.split('test.nakala.fr/')
+    if len(parse_handle) > 1 :
+        handle = parse_handle[1]
+        #TODO change the url to nakala, not test server
+        result = '<a href="https://test.nakala.fr/' + handle + '" title="data repository" target="_BLANK"><img style="height:2vh;" src="https://nakala.fr/build/images/nakala.png" alt="' + handle + '"/></a>'
+    else:
+        result = handle
+    return result
 class Contributors(datatables.Contributors):
     def __init__(self, req, model, **kw):
         super().__init__(req,model,**kw)

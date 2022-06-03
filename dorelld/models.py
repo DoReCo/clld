@@ -17,9 +17,11 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from clld import interfaces
 from clld.db.meta import DBSession, Base, CustomModelMixin
-from clld.db.models.common import Language, Contribution, Contributor
+from clld.db.models.common import Language, Contribution, Contributor, IdNameDescriptionMixin
 from clld.web.util.helpers import external_link, cc_link
 from clld.web.util.htmllib import HTML
+
+#from dorelld.interfaces import ILinkingAudio
 
     # Support functions
 def _get_cc(cc,arc="",arc_l=""):
@@ -46,7 +48,8 @@ def _get_cc(cc,arc="",arc_l=""):
     
     img_attrs = dict(
         alt=known[ch],
-        src="https://doreco.huma-num.fr/static/cc/" + ch + '.png')
+        # replace concat by doreco on final and add s to http
+        src="http://concat.huma-num.fr/static/cc/" + ch + '.png')
     img_attrs.update(height=15, width=80)
     if not ch == 'zero':
         license_url = url+ch+"/4.0/"
@@ -75,7 +78,10 @@ class doreLanguage(CustomModelMixin, Language):
         # For download
     lic = Column(String); audio_lic = Column(String)
     NAK = Column(String)
-    
+    MAUS = Column(String)
+    AUDIO = Column(String)
+    TEXT = Column(String)
+
     def glo_link(self):
         gl = "https://glottolog.org/resource/languoid/id/"
         return external_link(os.path.join(gl,self.id),
@@ -117,10 +123,13 @@ class doreContrib(CustomModelMixin, Contribution):
     transl = Column(String)
     sound = Column(String); overlap = Column(String)
     process = Column(String)
-    words = Column(Integer)
+    words = Column(String)
     extended = Column(Boolean)
         # For download
     NAK = Column(String)
+    
+    def NAK_link(self):
+        return external_link(self.NAK,label=self.sound)
     
 @implementer(interfaces.IContributor)
 class dorEditor(CustomModelMixin, Contributor):
@@ -135,3 +144,8 @@ class dorEditor(CustomModelMixin, Contributor):
             return self.name
         else:
             return external_link(self.url,label=self.name)
+
+
+#@implementer(ILinkingAudio)
+#class LinkingAudio(Base, IdNameDescriptionMixin):
+#    pass

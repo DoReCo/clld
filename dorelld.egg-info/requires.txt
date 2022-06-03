@@ -1,15 +1,16 @@
 clld
+clldmpg
 
 [dev]
 flake8
 waitress
 
 [test]
-coverage>=4.2
 mock
+pytest>=5.4
 pytest-clld
-pytest-cov
 pytest-mock
-pytest>=3.1
+pytest-cov
+coverage>=4.2
 selenium
 zope.component>=3.11.0

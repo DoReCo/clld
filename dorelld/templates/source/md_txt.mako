@@ -12,5 +12,5 @@ access = datetime.now().strftime("%m/%d/%Y")
 ${auth}. ${ctx.year}. ${ctx.title}.
 In Seifart, Frank, Ludger Paschen & Matthew Stave (eds.).
 Language Documentation Reference Corpus (DoReCo) 1.0.
-Berlin & Lyon: Leibniz-Zentrum Allgemeine Sprachwissenschaft & Université de Lyon/CNRS-DDL.
+Berlin & Lyon: Leibniz-Zentrum Allgemeine Sprachwissenschaft & laboratoire Dynamique Du Langage (UMR5596, CNRS & Université Lyon 2).
 <%text filter="h"><</%text>${ctx.url}<%text filter="h">></%text> (Accessed on ${access}).

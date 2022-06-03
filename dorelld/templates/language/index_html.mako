@@ -5,12 +5,6 @@
 <%! active_menu_item = "languages" %>
 <%block name="title">${_('Languages')}</%block>
 
-<%def name="contextnav()">
-    % for name in request.registry.settings['home_comp']:
-    ${util.contextnavitem(name)}
-    % endfor
-</%def>
-
 <h2>${_('Languages')}</h2>
 
 <div class="accordion" id="lang" style="margin-top: 1em; clear: right;">

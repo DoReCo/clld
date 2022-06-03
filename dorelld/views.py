@@ -1,3 +1,4 @@
+from clld.web.adapters.base import adapter_factory
 from pyramid.view import view_config
 from dorelld.scripts.download import download
 
@@ -20,3 +21,10 @@ def doreLoad(req):
           then zip them, then delete all but the zip file.
           If the zip file already exists, though, it is directly returned."""
     return download(req)
+
+@view_config(route_name='audio', renderer = 'audio/detail_html.mako')
+def DLaudio(req):
+    pass
+    req.name = 'audio download page'
+    req.description = 'test direct'
+    return {'ctx' : req}
